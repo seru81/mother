@@ -13,6 +13,18 @@ describe('字句解析', () => {
   test('+', () => {
     expect(lexicalAnalyse('+')).toStrictEqual([{ type: 'Plus' }])
   })
+  test('-', () => {
+    expect(lexicalAnalyse('-')).toStrictEqual([{ type: 'Minus' }])
+  })
+  test('*', () => {
+    expect(lexicalAnalyse('*')).toStrictEqual([{ type: 'Multiplied' }])
+  })
+  test('/', () => {
+    expect(lexicalAnalyse('/')).toStrictEqual([{ type: 'Divided' }])
+  })
+  test('==', () => {
+    expect(lexicalAnalyse('==')).toStrictEqual([{ type: 'Cmpequal' }])
+  })
   test('=', () => {
     expect(lexicalAnalyse('=')).toStrictEqual([{ type: 'Equal' }])
   })
@@ -32,11 +44,26 @@ describe('字句解析', () => {
   test('無効な文字列', () => {
     expect(lexicalAnalyse('あ')).toStrictEqual([{ type: 'UnknownCharacter', value: 'あ' }])
   })
-  test('識別子', () => {
+  test('小文字識別子', () => {
     expect(lexicalAnalyse('test abc')).toStrictEqual([
       { type: 'Ident', name: 'test' },
       { type: 'Ident', name: 'abc' },
     ])
+  })
+  test('大文字識別子', () => {
+    expect(lexicalAnalyse('TEST ABC')).toStrictEqual([
+      { type: 'Ident', name: 'TEST' },
+      { type: 'Ident', name: 'ABC' },
+    ])
+  })
+  test('大文字小文字混合識別子', () => {
+    expect(lexicalAnalyse('test ABC')).toStrictEqual([
+      { type: 'Ident', name: 'test' },
+      { type: 'Ident', name: 'ABC' },
+    ])
+  })
+  test('_', () => {
+    expect(lexicalAnalyse('_')).toStrictEqual([{ type: 'Ident', name: '_' }])
   })
   test('丸括弧', () => {
     expect(lexicalAnalyse('()')).toStrictEqual([
