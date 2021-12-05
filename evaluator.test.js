@@ -79,6 +79,26 @@ describe('評価', () => {
       expect(evaluate(lexAndParse('1+(non+23);'), emptyEnvironment).error.type).toBe('TypeError')
     })
   })
+  describe('引き算', () => {
+    test('2-1;', () => {
+      expect(evaluate(lexAndParse('2-1;'), emptyEnvironment)).toStrictEqual(
+        {
+          result: intValue(1),
+          environment: emptyEnvironment,
+        },
+      )
+    })
+    test('型エラー', () => {
+      expect(evaluate(lexAndParse('a-1;'), {
+        variables: new Map([['a', { type: 'NullValue' }]]),
+        functions: new Map(),
+      }).error.type).toBe('TypeError')
+    })
+    test('エラー時にエラーを上げていく処理', () => {
+      expect(evaluate(lexAndParse('(1-non)-23;'), emptyEnvironment).error.type).toBe('TypeError')
+      expect(evaluate(lexAndParse('1-(non-23);'), emptyEnvironment).error.type).toBe('TypeError')
+    })
+  })
   test('複数の文', () => {
     expect(evaluate(lexAndParse('1;2;'), emptyEnvironment)).toStrictEqual(
       {
